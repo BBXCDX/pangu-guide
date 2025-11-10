@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>施工指南 - [槃古涂料]</title>
+    <style>
+        /* --- 基础样式 --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5em;
+        }
+        h1 { text-align: center; }
+        a { color: #3498db; text-decoration: none; }
+
+        /* --- 导航栏 --- */
+        nav {
+            background-color: #ffffff;
+            border-bottom: 2px solid #ecf0f1;
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        nav a {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 0 5px;
+            font-weight: bold;
+            color: #555;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav a:hover, nav a.active {
+            background-color: #ecf0f1;
+            color: #3498db;
+        }
+
+        /* --- 页面板块 (用于单页切换) --- */
+        .page-section {
+            display: none; /* 默认隐藏 */
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .page-section.active {
+            display: block; /* 默认显示 */
+        }
+
+        /* --- 首页 (智能指南) --- */
+        .guide-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .guide-btn {
+            display: block;
+            padding: 25px 20px;
+            background-color: #3498db;
+            color: #ffffff;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .guide-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .guide-btn span {
+            display: block;
+            font-size: 0.8em;
+            font-weight: normal;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* --- 指南详情页 --- */
+        .video-placeholder {
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 宽高比 */
+            background-color: #333;
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .video-placeholder::before {
+            content: "【您的施工教学视频】";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2em;
+        }
+        /* 您可以替换为真实的iframe */
+        /*
+        .video-placeholder iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        */
+        .steps {
+            list-style: none;
+            padding-left: 0;
+        }
+        .steps li {
+            position: relative;
+            padding: 10px 0 10px 40px;
+            border-bottom: 1px dashed #eee;
+        }
+        .steps li::before {
+            content: "✔"; /* 或使用图标 */
+            position: absolute;
+            left: 0;
+            top: 10px;
+            font-size: 1.2em;
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        .steps h3 {
+            margin: 0 0 5px 0;
+            color: #34495e;
+        }
+
+        /* --- 计算器 --- */
+        .calculator-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .calc-button {
+            grid-column: 1 / -1; /* 占满整行 */
+            padding: 12px;
+            background-color: #2ecc71;
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .calc-button:hover { background-color: #27ae60; }
+        #calc-result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecfdf5;
+            border: 1px solid #bbf7d0;
+            border-radius: 5px;
+            display: none; /* 默认隐藏 */
+        }
+        #calc-result h3 { color: #166534; margin-top: 0; }
+
+        /* --- FAQ --- */
+        .faq-item {
+            border-bottom: 1px solid #ecf0f1;
+            margin-bottom: 10px;
+        }
+        .faq-question {
+            padding: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            color: #34495e;
+        }
+        .faq-question::after {
+            content: '▼';
+            position: absolute;
+            right: 15px;
+            transition: transform 0.3s;
+        }
+        .faq-question.active::after {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            padding: 0 15px 15px 15px;
+            display: none; /* 默认隐藏 */
+            background-color: #fafafa;
+        }
+        .faq-answer.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="container" style="padding-top: 30px; padding-bottom: 30px;">
+        <div style="
+            display: flex; 
+            justify-content: space-between; /* 关键：让内容左右分散 */
+            align-items: center; /* 垂直居中对齐 */
+            flex-wrap: wrap; /* 手机上自动换行 */
+        ">
+            <h1 style="
+                margin: 0; 
+                font-size: 2.5em; /* 放大主标题字体 */
+                color: #2980b9; 
+            ">
+                槃古涂料施工指南
+            </h1>
+            
+            <p style="
+                margin: 0; 
+                font-size: 1.2em; /* 放大副标题字体 */
+                color: #7f8c8d; /* 柔和的灰色 */
+                font-weight: bold;
+                text-align: right; /* 右对齐 */
+                /* 确保手机上不会紧贴主标题 */
+                padding-top: 10px; 
+            ">
+                好漆自己刷，轻松搞定家
+            </p>
+        </div>
+    </header>
+    <nav class="container">
+                <a href="#home" class="nav-link active" onclick="showPage('home', this)">涂刷指南</a>
+                <a href="#calculator" class="nav-link" onclick="showPage('calculator', this)">用量计算器</a>
+                <a href="#faq" class="nav-link" onclick="showPage('faq', this)">常见问题</a>
+                
+                        <a href="#wechat-qr" class="nav-link" onclick="showPage('wechat-qr', this)"
+                   style="color: #2ecc71; font-weight: bold; padding: 10px 18px;">
+                     关注微信视频号
+                </a>
+            </nav>
+
+    <main class="container">
+        
+        <section id="home" class="page-section active" style="padding-top: 15px;">   
+            <p style="margin-top: 5px;">请选择您的施工项目，我们将为您提供“保姆级”教学：</p>
+            <div class="guide-buttons">
+                <a class="guide-btn" onclick="showPage('guide-wall', this)">
+                    <i class="icon"></i> 环氧彩砂自流平
+                    <span>(室内外地面、天花板)</span>
+                </a>
+                <a class="guide-btn" onclick="showPage('guide-wood', this)">
+                    <i class="icon"></i> 三合一地坪漆
+                    <span>(室内地面)</span>
+                </a>
+                <a class="guide-btn" onclick="showPage('guide-metal', this)">
+                    <i class="icon"></i> 金属漆
+                    <span>(室内外各种表面)</span>
+                </a>
+                <a class="guide-btn" onclick="showPage('guide-dimian', this)">
+                    <i class="icon"></i> 环保水性漆
+                    <span>(室内地面)</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="guide-wall" class="page-section">
+            <a href="#home" onclick="showPage('home', this)">&larr; 返回指南首页</a>
+            <h2>环氧彩砂自流平 “保姆级”施工指南</h2>
+            <p style="text-align: center; color: #34495e; font-weight: bold;">【观看视频，即刻掌握施工要领！】</p>
+            
+            <iframe style="width: 100%; aspect-ratio: 16/9; border: none;"
+                src="https://player.bilibili.com/player.html?bvid=BV1xJ4m1T74V&autoplay=0"
+                scrolling="no"
+                frameborder="no"
+                framespacing="0"
+                allowfullscreen="true">
+            </iframe>
+            
+            <div style="text-align: center; margin: 20px 0; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background-color: #f9f9f9;">
+                <h3 style="margin-top: 0; color: #f39c12;">✔ 推荐产品 & 施工工具清单</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <p style="font-weight: bold; margin-bottom: 5px; color: #34495e;">[施工效果图] 环氧彩砂自流平</p>
+                    <img src="https://www.imgur.la/images/2025/11/10/2025116-100429.png" 
+                         alt="产品包装展示" 
+                         style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: block; margin: 0 auto;">
+                </div>
+                
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">
+                
+                <div style="margin-bottom: 10px;">
+                    <p style="font-weight: bold; margin-bottom: 5px; color: #34495e;">施工工具一览</p>
+                    <img src="https://www.imgur.la/images/2025/11/10/3592b43a8bde1fc5f23cb7c7dbaf88ee.png" 
+                         alt="工具清单全景" 
+                         style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: block; margin: 0 auto;">
+                </div>
+        
+                <p style="color: #555; font-size: 0.9em;">工具清单说明：滚筒、刷子、搅拌棒、接长杆、美纹纸、遮蔽膜。</p>
+            </div>
+        
+            
+
+            <div style="margin-top: 20px; padding-top: 5px;">
+                
+                <h3 style="color: #34495e;">完整施工流程（文字版）：</h3>
+                <ul class="steps">
+                    <li>
+                        <h3>第一步：准备阶段</h3>
+                        <p>使用遮蔽膜和胶带保护家具、地板和开关。检查墙面，铲除起皮，填补裂缝。</p>
+                    </li>
+                    <li>
+                        <h3>第二步：打磨清洁</h3>
+                        <p>使用砂纸打磨墙面，确保平整。用鸡毛掸或湿布清理干净所有粉尘。</p>
+                    </li>
+                    <li>
+                        <h3>第三步：涂刷底漆 (重要)</h3>
+                        <p>将底漆搅拌均匀，涂刷一遍。底漆能抗碱防霉，并让面漆效果更好更省料。</p>
+                    </li>
+                    <li>
+                        <h3>第四步：涂刷面漆 (两遍)</h3>
+                        <p>待底漆干透后 (约2小时)，开始刷第一遍面漆。先用刷子刷边角，再用滚筒按W型滚涂大面。4小时后再刷第二遍。</p>
+                    </li>
+                    <li>
+                        <h3>第五步：收尾通风</h3>
+                        <p>在面漆未完全干透时，撕下遮蔽胶带。开窗通风，等待墙面完全干燥。</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="guide-wood" class="page-section">
+             <a href="#home" onclick="showPage('home', this)">&larr; 返回指南首页</a>
+             <h2>木器漆 施工指南</h2>
+             <p>木器漆施工内容... (请在此处添加视频和步骤)</p>
+        </section>
+        
+        <section id="guide-metal" class="page-section">
+             <a href="#home" onclick="showPage('home', this)">&larr; 返回指南首页</a>
+             <h2>金属漆 施工指南</h2>
+             <p>金属漆施工内容... (请在此处添加视频和步骤)</p>
+        </section>
+        <section id="guide-dimian" class="page-section">
+            <a href="#home" onclick="showPage('home', this)">&larr; 返回指南首页</a>
+            <h2>环保水性漆 施工指南</h2>
+            <p>环保水性漆施工内容... (请在此处添加视频和步骤)</p>
+       </section>
+
+
+        <section id="calculator" class="page-section">
+            <h2>涂料用量计算器</h2>
+            <p>选择您的产品并输入房间信息，我们将估算所需用量，帮您省钱！</p>
+            
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="product-type">请选择要计算的产品类型:</label>
+                <select id="product-type">
+                    <option value="wall">室内环氧彩砂自流平 (高遮盖)</option>
+                    <option value="wood">木器漆 (家具/木门)</option>
+                    <option value="metal">金属防锈漆 (栏杆/铁艺)</option>
+                    <option value="dimian">环保水性漆 (室内地面)</option>
+                </select>
+            </div>
+        
+            <div class="calculator-form">
+                <div class="form-group">
+                    <label for="room-area">房间地面面积 (㎡)</label>
+                    <input type="number" id="room-area" placeholder="例如: 15">
+                </div>
+                <div class="form-group">
+                    <label for="room-height">房间层高 (米)</label>
+                    <input type="number" id="room-height" value="2.8" placeholder="默认 2.8">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="include-ceiling">是否粉刷天花板?</label>
+                    <select id="include-ceiling">
+                        <option value="yes" selected>是，包含天花板</option>
+                        <option value="no">否，不刷天花板</option>
+                    </select>
+                </div>
+                
+                <button class="calc-button" onclick="calculatePaint()">开始计算</button>
+            </div>
+            
+            <div id="calc-result">
+                <h3>估算结果：</h3>
+                <p>您需要涂刷的总面积约：<strong id="total-area">0</strong> 平方米</p>
+                <p>基于 <span id="product-name">[选择的产品]</span> 的标准：</p>
+                <ul>
+                    <li><strong>底漆：<span id="primer-liters">0</span> 公斤 (kg)</strong></li>
+                    <li><strong>面漆：<span id="topcoat-liters">0</span> 公斤 (kg)</strong></li>
+                </ul>
+                <small>* 此为理论估算值，实际用量可能因墙面粗糙度、施工手法略有不同。</small>
+            </div>
+        </section>
+
+        <section id="faq" class="page-section">
+            <h2>常见问题 (Q&A)</h2>
+            <p>新手别慌，您遇到的问题这里都有答案：</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">刷完墙面花了/有刷痕怎么办？</div>
+                    <div class="faq-answer">
+                        <p>A: 出现刷痕通常是涂料太稠、滚筒上料不均或重涂时间太短。确保兑水比例合适，滚涂时按W型，并在第一遍漆膜“指触干”后再刷第二遍。轻微刷痕干燥后会减弱，如果严重，需打磨后重刷。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">为什么有色差？/ 颜色和色卡不一样？</div>
+                    <div class="faq-answer">
+                        <p>A: 1. 色卡面积小，刷上墙后（面积大）受光线影响会感觉偏深。2. 必须充分搅拌均匀，防止色浆沉底。 3. 确保使用同一批次涂料刷同一面墙。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">刷完多久可以入住？</div>
+                    <div class="faq-answer">
+                        <p>A: 我们的水性漆环保净味。刷完后，请保持开窗通风，一般建议通风 7 天后入住，让墙面彻底干透，也让室内空气充分流通。</p>
+                    </div>
+                </div>
+                </div>
+        </section>
+        
+        <section id="wechat-qr" class="page-section">
+            <a href="#home" onclick="showPage('home', this)">&larr; 返回指南首页</a>
+            <h2 style="text-align: center; margin-top: 10px;">扫码关注【槃古涂料】</h2>
+            
+            <div style="text-align: center; padding: 20px 0;">
+                
+                <img src="https://www.imgur.la/images/2025/11/10/2025718-144255.png"
+                     alt="微信视频号二维码" 
+                     style="width: 200px; height: 200px; border: 4px solid #f0f0f0; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                
+                <p style="
+                    margin-top: 15px; 
+                    font-size: 1.1em; 
+                    color: #888; 
+                    font-weight: bold;">
+                    扫描关注公众号了解更多
+                </p>
+                
+                <p style="color: #bbb; font-size: 0.9em; margin-top: 5px;">
+                    （长按图片识别二维码关注）
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer style="text-align: center; padding: 20px; margin-top: 20px; color: #777; font-size: 0.9em;">
+        <p>&copy; 2025 [槃古涂料] 版权所有</p>
+    </footer>
+
+    <script>
+        // --- 1. 页面切换逻辑 ---
+        function showPage(pageId, navElement) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // 显示目标页面
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.style.display = 'block';
+            } else {
+                // 如果是子页面 (如 guide-wall), 仍显示 home
+                document.getElementById('home').style.display = 'block';
+            }
+            
+            // 更新导航栏激活状态
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // 激活对应的导航链接 (或激活'home'如果点击的是子页面)
+            let activeLink;
+            if (pageId.startsWith('guide-')) {
+                activeLink = document.querySelector('nav a[href="#home"]');
+            } else {
+                activeLink = document.querySelector(`nav a[href="#${pageId}"]`);
+            }
+            if(activeLink) activeLink.classList.add('active');
+
+            // 如果是通过按钮点击的 (非导航栏)，则不需要更新导航状态
+            if (navElement && navElement.classList.contains('guide-btn')) {
+                 document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
+                 document.querySelector('nav a[href="#home"]').classList.add('active');
+                 // 隐藏 home, 显示 guide-wall
+                 document.getElementById('home').style.display = 'none';
+                 document.getElementById(pageId).style.display = 'block';
+            }
+            
+            // 切换页面后滚动到顶部
+            window.scrollTo(0, 0);
+        }
+        
+        // --- 2. FAQ 折叠逻辑 ---
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                
+                // 切换当前点击的
+                question.classList.toggle('active');
+                answer.classList.toggle('active');
+                
+                if (answer.classList.contains('active')) {
+                    answer.style.display = 'block';
+                } else {
+                    answer.style.display = 'none';
+                }
+            });
+        });
+
+        // --- 3. 计算器逻辑 ---
+        function calculatePaint() {
+            // !! 请根据您的产品规格修改这些参数 !!
+            const COVERAGE_PER_LITER = 12; // 您的涂料每升刷1遍的面积 (平方米)
+            const PRIMER_COATS = 1;        // 底漆遍数
+            const TOPCOAT_COATS = 2;       // 面漆遍数
+            const BUCKET_SIZE_LITERS = 5;  // 您的涂料桶规格 (例如 5L)
+
+            // 获取输入值
+            const area = parseFloat(document.getElementById('room-area').value);
+            const height = parseFloat(document.getElementById('room-height').value);
+            const includeCeiling = document.getElementById('include-ceiling').value === 'yes';
+            
+            if (isNaN(area) || isNaN(height) || area <= 0 || height <= 0) {
+                alert("请输入有效的房间面积和层高！");
+                return;
+            }
+
+            // 计算周长 (估算值，(长+宽)*2 ≈ 4 * sqrt(面积))
+            // 这是一个简化的估算，假设房间接近正方形
+            const perimeter = 4 * Math.sqrt(area); 
+            
+            // 计算墙面积
+            let wallArea = perimeter * height;
+            
+            // 计算总面积
+            let totalArea = wallArea;
+            if (includeCeiling) {
+                totalArea += area; // 加上天花板面积
+            }
+
+            // 计算所需升数
+            const totalPrimerLiters = (totalArea * PRIMER_COATS) / COVERAGE_PER_LITER;
+            const totalTopcoatLiters = (totalArea * TOPCOAT_COATS) / COVERAGE_PER_LITER;
+
+            // 计算所需桶数 (向上取整)
+            const primerBuckets = Math.ceil(totalPrimerLiters / BUCKET_SIZE_LITERS);
+            const topcoatBuckets = Math.ceil(totalTopcoatLiters / BUCKET_SIZE_LITERS);
+
+            // 显示结果
+            document.getElementById('total-area').textContent = totalArea.toFixed(1);
+            document.getElementById('primer-liters').textContent = primerBuckets;
+            document.getElementById('topcoat-liters').textContent = topcoatBuckets;
+            document.getElementById('calc-result').style.display = 'block';
+        }
+        
+        // 初始化：显示首页
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('home', document.querySelector('nav a[href="#home"]'));
+        });
+
+    </script>
+
+</body>
+</html>
